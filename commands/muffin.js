@@ -151,6 +151,11 @@ module.exports = {
         )
         .addSubcommand(subcommand =>
             subcommand
+                .setName('stop')
+                .setDescription('Stop the current countdown without leaving voice')
+        )
+        .addSubcommand(subcommand =>
+            subcommand
                 .setName('leave')
                 .setDescription('Leave the voice channel')
         ),
@@ -162,6 +167,8 @@ module.exports = {
             return await this.handleCountdown(interaction);
         } else if (subcommand === 'join') {
             return await this.handleJoin(interaction);
+        } else if (subcommand === 'stop') {
+            return await this.handleStop(interaction);
         } else if (subcommand === 'leave') {
             return await this.handleLeave(interaction);
         }
@@ -308,6 +315,31 @@ module.exports = {
                 });
             }
         }
+    },
+
+    async handleStop(interaction) {
+        const player = guildPlayers.get(interaction.guild.id);
+
+        if (!player || player.state.status === AudioPlayerStatus.Idle) {
+            return await interaction.reply({
+                content: 'No countdown is currently playing.',
+                ephemeral: true
+            });
+        }
+
+        const stopped = player.stop(true);
+        recordGuildVoiceEvent(interaction.guild.id, {
+            type: 'countdown_stopped',
+        });
+
+        if (!stopped) {
+            return await interaction.reply({
+                content: 'No countdown is currently playing.',
+                ephemeral: true
+            });
+        }
+
+        await interaction.reply('Stopped the countdown.');
     },
 
     async handleLeave(interaction) {
