@@ -4,7 +4,7 @@ A Discord bot that plays audio countdown sequences in voice channels using Maste
 
 ## Features
 
-- `/muffin` slash command for join/leave/countdown
+- `/muffin` slash command for join/leave/countdown/stop
 - Owner-only debug message commands for status, voice diagnostics, recent errors, and dependency reports
 - Plays audio files sequentially in voice channels
 - Guild-specific commands for faster deployment
@@ -78,6 +78,10 @@ Starts an audio countdown in your current voice channel.
 ### `/muffin join`
 
 Joins your current voice channel.
+
+### `/muffin stop`
+
+Stops the current countdown audio without making the bot leave the voice channel. The stopped audio resource is discarded, so it cannot be resumed. Start a new countdown with `/muffin cd`.
 
 ### `/muffin leave`
 
